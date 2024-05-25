@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 yarn.lock
+
+__pycache__
+
+ChatGPT.md
