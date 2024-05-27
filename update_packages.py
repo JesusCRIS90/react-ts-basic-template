@@ -1,22 +1,20 @@
-from utils import *
+from utils import update_packages, get_argument_parser_action, MessageError
 
-clear_console()
-# Step 1 - Read package.json file and Getting Dependencies
-dependencies = get_dependencies( read_package_file() )
+action = get_argument_parser_action()
 
-# Step 2 - Delete node_modules folder
-remove_node_modules_folder()
+if( action == "update" ):
+    file_path = './package.json'
 
-# Step 3 - Use command -> yarn remove to remove dependencies
-execute_command(['powershell', '-Command', 'yarn', 'remove', string_list_to_string( dependencies['dependencies'] )])
-execute_command(['powershell', '-Command', 'yarn', 'remove', string_list_to_string( dependencies['devDependencies'] )])
+elif( action == "reset" ):
+    file_path = './package.original.json'
 
-# Step 4 - Delete Yarn.lock file
-remove_yarn_lock_file()
+else:
+    raise MessageError( "Invalid Argument" )
 
-# Step 5 - Re-Install Dependencies
-execute_command(['powershell', '-Command', 'yarn', 'add', string_list_to_string( dependencies['dependencies'] )])
-execute_command(['powershell', '-Command', 'yarn', 'add', '-D', string_list_to_string( dependencies['devDependencies'] )])
+update_packages( file_path=file_path )
+
+
+
 
 
 

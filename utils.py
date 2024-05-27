@@ -1,6 +1,8 @@
 import os
 import json
+import time
 import shutil
+import argparse
 import subprocess
 
 print("Python -> Updating Packages")
@@ -45,8 +47,7 @@ def clear_console():
     else:  # For Unix/Linux/MacOS
         execute_command(['clear'])
 
-def read_package_file():
-    file_path = './package.json'
+def read_package_file( file_path: str ):
     try:
         with open(file_path, 'r') as file:
             data = json.load(file)
@@ -98,3 +99,38 @@ def get_dependencies( packageInfo: dict ):
 
 def string_list_to_string( stringList: list ):
     return " ".join( stringList )
+
+def get_argument_parser_action():
+    # Create ArgumentParser object
+    parser = argparse.ArgumentParser(description='Packages Management')
+
+    # Add positional arguments
+    parser.add_argument('arg1', type=str, help='Action Update')
+
+    # Parse the command-line arguments
+    args = parser.parse_args()
+
+    # Accessing parsed arguments
+    return args.arg1
+
+def update_packages( file_path: str ):
+
+    clear_console()
+    print(f'JSON File to Read {file_path}')
+    # Step 1 - Read package.json file and Getting Dependencies
+    dependencies = get_dependencies( read_package_file( file_path ) )
+
+    # Step 2 - Delete node_modules folder
+    remove_node_modules_folder()
+
+    # Step 3 - Use command -> yarn remove to remove dependencies
+    execute_command(['powershell', '-Command', 'yarn', 'remove', string_list_to_string( dependencies['dependencies'] )])
+    execute_command(['powershell', '-Command', 'yarn', 'remove', string_list_to_string( dependencies['devDependencies'] )])
+
+    # Step 4 - Delete Yarn.lock file
+    remove_yarn_lock_file()
+
+    # Step 5 - Re-Install Dependencies
+    execute_command(['powershell', '-Command', 'yarn', 'add', string_list_to_string( dependencies['dependencies'] )])
+    execute_command(['powershell', '-Command', 'yarn', 'add', '-D', string_list_to_string( dependencies['devDependencies'] )])
+
