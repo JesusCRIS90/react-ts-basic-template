@@ -17,14 +17,34 @@ If you are developing a production application, we recommend updating the config
 export default {
   // other rules...
   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
+    ecmaVersion: "latest",
+    sourceType: "module",
+    project: ["./tsconfig.json", "./tsconfig.node.json"],
     tsconfigRootDir: __dirname,
   },
-}
+};
 ```
 
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+## Scripts to Update Packages
+
+The project have two script to manage packages automatically:
+
+1. One Script to update all packages automatically.
+
+```
+yarn update_packages
+```
+
+2. Another Scripts to revert updated packages come back to original packages.
+
+```
+yarn reset_packages
+```
+
+Considerations:
+
+- Do not delete or edit file "package.original.json". Is used by revert changes.
