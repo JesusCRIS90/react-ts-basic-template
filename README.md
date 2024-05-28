@@ -48,3 +48,5 @@ yarn reset_packages
 Considerations:
 
 - Do not delete or edit file "package.original.json". Is used by revert changes.
+- These Scripts only work on Windows. Windows Powershell is used to execute some terminal commands.
+- New OS Compatibility will be added in a future.
